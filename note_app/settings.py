@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-0yaterwmbdj=r4u^4mfey5t%(rvej7l-lnw32f6_6_0vni&3vj
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -37,8 +37,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'rest_framework',
+    'rest_framework.authtoken',
+    'djoser',
+    
     'apps.note',
+    'apps.auth_app'
 ]
 
 MIDDLEWARE = [
@@ -82,6 +87,28 @@ DATABASES = {
     }
 }
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES':(
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES':(
+        'rest_framework.permissions.IsAuthenticated',
+    )
+}
+
+AUTH_USER_MODEL = 'auth_app.User'
+
+DJOSER = {
+    'LOGIN_FIELD': 'email',
+    'USER_CREATE_PASSWORD_RETYPE': True,
+    'SERIALIZERS': {
+        'user_create': 'apps.auth_app.serializers.UserCreateSerializer',
+        'user': 'apps.auth_app.serializers.UserCreateSerializer',
+        #'curent_user': 'apps.auth_app.serializers.CurentUserSerializer',
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
